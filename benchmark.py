@@ -1,4 +1,3 @@
-### File: compare_cache.py
 import numpy as np
 import joblib
 from data_generator import generate_skewed_data
