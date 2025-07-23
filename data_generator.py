@@ -1,4 +1,3 @@
-### File: data_generator.py
 import numpy as np
 import argparse
 import os
@@ -7,13 +6,6 @@ from collections import defaultdict
 
 
 def generate_skewed_data(num_requests: int, unique_items: int, skew: float = 1.2):
-    """
-    Generates a list of item IDs following a Zipfian (skewed) distribution.
-    :param num_requests: Total number of requests to generate
-    :param unique_items: Number of unique item IDs
-    :param skew: Zipf distribution parameter (skew > 1)
-    :return: List of item IDs
-    """
     raw = np.random.zipf(a=skew, size=num_requests)
     items = (raw % unique_items)
     return items.tolist()
