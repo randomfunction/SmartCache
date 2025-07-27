@@ -1,6 +1,7 @@
-# Intelligent ML-Driven Cache System
 
-A high-performance hybrid caching system that uses traditional policies (LRU, LFU, MFU) and compares them with a **Machine Learning-based intelligent caching strategy** trained to approximate **Belady's Optimal Replacement Policy**.
+# Intelligent ML-Driven Cache System (Offline + Online)
+
+A high-performance hybrid caching system that combines traditional policies (LRU, LFU, MFU) with both **offline-trained** and **online-learning** machine learning models to approximate **Belady's Optimal Replacement Policy**.
 
 ---
 
@@ -8,98 +9,92 @@ A high-performance hybrid caching system that uses traditional policies (LRU, LF
 
 This project explores intelligent caching by:
 
-- Generating realistic skewed access patterns using Zipf distribution
-- Labeling optimal cache behavior using Belady's algorithm
-- Training multiple ML models to predict cache-worthy items
-- Integrating the best-performing model into a custom cache system
-- Benchmarking against traditional strategies (LRU, LFU, MFU)
+* Generating realistic **Zipfian (skewed)** access patterns
+* Simulating **Belady’s optimal replacement** using full and partial lookahead
+* Training ML models (Logistic Regression, XGBoost, CatBoost, LightGBM) to **predict cache-worthiness**
+* Implementing a real-time **Online ML Cache** using the `river` library
+* Benchmarking all strategies against LRU, LFU, MFU
 
 ---
 
-## Benchmark Results
+## Benchmark Results (Offline ML Cache)
 
-| Cache Type | Hit Rate |
-|------------|----------|
-| LRU        | 0.3402   |
-| LFU        | 0.4776   |
-| MFU        | 0.0960   |
-| **ML (Best Model)** | **0.4805** |
+| Cache Type                  | Hit Rate   |
+| --------------------------- | ---------- |
+| LRU                         | 0.3402     |
+| LFU                         | 0.4776     |
+| MFU                         | 0.0960     |
+| **ML (Best Offline Model)** | **0.4805** |
 
-> ML-based cache slightly outperforms LFU, showcasing learning-based adaptation from access history.
+---
+
+## Online Learning Results
+
+| Metric                  | Value  |
+| ----------------------- | ------ |
+| **Streaming Hit Rate**  | 0.6611 |
+| **Prediction Accuracy** | 0.9509 |
+
+> The online ML cache adapts to access patterns in real time, significantly outperforming all static policies.
 
 ---
 
 ## Features
 
-- Custom implementation of **LRU**, **LFU**, and **MFU** cache policies
-- Trains 4 ML models (LogReg, XGBoost, CatBoost, LightGBM)
-- Selects the **best model automatically based on validation accuracy**
-- Simulates **Belady’s optimal policy** for labeling training data
-- Logs and prints hit rate comparisons across policies
+* Custom implementation of **LRU**, **LFU**, and **MFU**
+* Training and selection of best model among **LogReg**, **XGBoost**, **CatBoost**, **LightGBM**
+* Belady’s **optimal replacement simulation** (full and partial lookahead)
+* Real-time **OnlineMLCache** (built with `river`) that trains on-the-fly
+* Hit rate + accuracy tracking and full benchmarking
 
----
 
-## File Structure
+## Setup & Usage
 
-```
-.
-├── data_generator.py       # Generates skewed access patterns + labels with Belady
-├── train_models.py         # Extracts features and trains models
-├── test_cache.py           # Tests smart cache with best model on fresh data
-├── compare_cache.py        # Benchmarks LRU, LFU, MFU, ML on the same data
-├── models/                 # Stores trained ML models
-├── data/                   # Contains generated labeled data (CSV)
-└── requirements.txt        # Python dependencies
-```
 
----
-
-## Setup
-
-```bash
-# Install dependencies
+### 1. Install all dependencies
 pip install -r requirements.txt
 
-# Generate labeled training data
+### 2. Generate labeled data (offline Belady)
 python data_generator.py --num_requests 100000 --unique_items 1000 --capacity 100 --output data/labeled_requests.csv
 
-# Train models and save the best
+### 3. Train all ML models
 python train_models.py
 
-# Test smart cache performance
+### 4. Run offline ML cache
 python test_cache.py
 
-# Benchmark all cache strategies
+### 5. Benchmark all strategies (LRU, LFU, MFU, ML)
 python compare_cache.py
-```
+
+### 6. Run online ML cache (real-time learning)
+python test_online_cache.py
+
 
 ---
 
 ## Sample Output
 
-```
-=== Cache Hit Rates ===
+```bash
+=== Offline Cache Hit Rates ===
 LRU : 0.3402
 LFU : 0.4776
 MFU : 0.0960
 ML  : 0.4805
+
+--- Streaming Cache ---
+Streaming ML-Cache Hit Rate: 0.6611
+Prediction Accuracy:       0.9509
 ```
 
----
-
-## TODOs & Future Work
-
-- Add recency-based features (e.g., time since last seen)
-- Use online learning to update model during simulation
-- Visualize model decisions and cache evictions
-- Dockerize the project for reproducibility
-
----
-
 ## License
+
 MIT License.
 
 ---
 
-## Author
-Tanishq Parihar — *Built as a systems+ML project to explore learning-enhanced infrastructure*
+## 👤 Author
+
+**Tanishq Parihar**
+*Built as a systems + ML hybrid project to explore intelligent infrastructure and predictive caching*
+
+---
